@@ -367,7 +367,7 @@ function renderMusicPlayerCard(){
 var playlist = [
   {title:"昔涟",url:"music/昔涟.flac"},
   {title:"拂晓",url:"music/拂晓.flac"},
-  {title:"也支持完整 URL，比如 CDN 链接",url:"music/song3.mp3"}
+  {title:"曲终",url:"music/曲终.flac"}
 ];
 /*
   使用说明：
@@ -391,8 +391,13 @@ var mp = {
   current: parseInt(localStorage.getItem('mp_current')||'0'),
   playing: false,
   audio: new Audio(),
-  init: function(){var t=this;if(t._initDone){t.refresh();return}t._initDone=true;
-    if (!document.getElementById('mpVolume')) return;
+  init: function(){
+    var t = this;
+    if (t._initDone) return;          // 删除 refresh() 调用
+    t._initDone = true;
+  
+  // 保护：如果音乐播放器容器还没渲染，就跳过初始化
+  if (!document.getElementById('mpVolume')) return;
     var t=this;t.audio.volume=(parseInt(localStorage.getItem('mp_volume')||'70'))/100;
     document.getElementById('mpVolume').value=parseInt(localStorage.getItem('mp_volume')||'70');
     t.audio.addEventListener('timeupdate',function(){t.updateProgress()});
