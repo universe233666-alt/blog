@@ -19,7 +19,7 @@
   --shadow-md:0 4px 6px rgba(0,0,0,.05),0 2px 4px rgba(0,0,0,.04);
   --shadow-lg:0 10px 25px rgba(0,0,0,.08);
   --radius:10px;--radius-sm:6px;--radius-full:999px;
-  --hero-image:url("");--hero-gradient:linear-gradient(135deg,rgba(238,242,255,.88) 0%,rgba(250,245,255,.88) 50%,rgba(240,249,255,.88) 100%);
+  --hero-image:url("遐蝶.gif");--hero-gradient:linear-gradient(135deg,rgba(238,242,255,.88) 0%,rgba(250,245,255,.88) 50%,rgba(240,249,255,.88) 100%);
 }
 .dark{
   --bg:#030712;--bg2:#0f172a;--bg3:#1e293b;
@@ -33,7 +33,7 @@
   --shadow:0 0 0 1px rgba(255,255,255,.04),0 1px 3px rgba(0,0,0,.2);
   --shadow-md:0 0 0 1px rgba(255,255,255,.04),0 4px 6px rgba(0,0,0,.3);
   --shadow-lg:0 0 0 1px rgba(255,255,255,.04),0 10px 25px rgba(0,0,0,.4);
-  --hero-image:url("");--hero-gradient:linear-gradient(135deg,rgba(15,23,42,.9) 0%,rgba(26,16,64,.9) 50%,rgba(15,23,42,.9) 100%);
+  --hero-image:url("遐蝶.gif");--hero-gradient:linear-gradient(135deg,rgba(15,23,42,.9) 0%,rgba(26,16,64,.9) 50%,rgba(15,23,42,.9) 100%);
 }
 body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;display:flex;flex-direction:column;min-height:100vh;-webkit-font-smoothing:antialiased}
 #app{flex:1}
@@ -55,7 +55,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:v
 .theme-btn svg{width:18px;height:18px}
 .theme-btn .icon-moon,.dark .theme-btn .icon-sun{display:none}
 .dark .theme-btn .icon-moon{display:block}
-.hero{padding:48px 0 40px;text-align:center;background:var(--hero-gradient);border-bottom:1px solid var(--border)}
+.hero{padding:48px 0 40px;text-align:center;background:var(--hero-gradient),var(--hero-image);background-size:cover;background-position:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
 .hero-title{font-size:36px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px;background:linear-gradient(135deg,var(--accent),#a855f7,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% 200%;animation:gradientShift 4s ease infinite}
 .hero-sub{font-size:15px;color:var(--text2);margin-bottom:24px}
 .hero-avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--bg2);box-shadow:var(--shadow-md);margin-bottom:16px;transition:transform .3s}
@@ -366,8 +366,8 @@ function renderMusicPlayerCard(){
 }
 var playlist = [
   {title:"昔涟",url:"music/昔涟.flac"},
-  {title:"拂晓",url:"music/拂晓.ogg"},
-  {title:"曲终奏雅",url:"music/曲终.flac"}
+  {title:"拂晓",url:"music/拂晓.flac"},
+  {title:"也支持完整 URL，比如 CDN 链接",url:"music/song3.mp3"}
 ];
 /*
   使用说明：
@@ -392,6 +392,7 @@ var mp = {
   playing: false,
   audio: new Audio(),
   init: function(){var t=this;if(t._initDone){t.refresh();return}t._initDone=true;
+    if (!document.getElementById('mpVolume')) return;
     var t=this;t.audio.volume=(parseInt(localStorage.getItem('mp_volume')||'70'))/100;
     document.getElementById('mpVolume').value=parseInt(localStorage.getItem('mp_volume')||'70');
     t.audio.addEventListener('timeupdate',function(){t.updateProgress()});
@@ -503,12 +504,38 @@ function getStats(){
   var last=sorted.length?formatDate(sorted[sorted.length-1].createdAt):'暂无';
   return {articles:pub.length,tags:allTags.length,chars:chars,days:days,lastActivity:last}
 }
-function renderLeftSidebar(){
-  var s=getStats();
-  var rt=s.days;var y=Math.floor(rt/365);var m=Math.floor((rt%365)/30);var d=rt%30;
-  var rtStr=y?(y+'年'+(m?m+'个月':'')):(m?(m+'个月'+d+'天'):(d+'天'));
-  '<div class="sidebar-card"><h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 联系方式</h3><div class="sb-contact">'+(contactInfo.qq?'<a class="sb-contact-btn" href="tencent://message/?uin='+contactInfo.qq+'"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 11.5c0 3 1.3 5.6 3.4 7.3-.2.6-.5 1.8-.8 2.7-.1.3.2.6.5.5.9-.3 1.8-.8 2.6-1.3 1.4.4 2.9.7 4.3.7 5.5 0 10-4.5 10-9.5S17.5 2 12 2z"/></svg> QQ</a>':'')+(contactInfo.github?'<a class="sb-contact-btn" href="https://github.com/'+contactInfo.github+'" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 4.4 2.9 8.2 6.8 9.5.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.4-1.1.7-1.3-2.2-.3-4.5-1.1-4.5-5 0-1.1.4-2 1-2.7-.1-.3-.5-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .6 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.5 5 .4.3.7.9.7 1.8v2.7c0 .3.2.6.7.5 4-1.3 6.8-5.1 6.8-9.5C22 6.5 17.5 2 12 2z"/></svg> GitHub</a>':'')+(contactInfo.email?'<a class="sb-contact-btn" href="mailto:'+contactInfo.email+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4l-10 8L2 4"/></svg> Email</a>':'')+'</div></div>'+return '<div class="sidebar-card"><h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>公告</h3><p class="sb-announce">欢迎来到 rainhotaru！<br>这里记录技术与生活的点滴。</p></div>'
-    +'<div class="sidebar-card"><h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>站点统计</h3><div class="sb-stats"><div class="sb-stat"><span class="sb-stat-num">'+s.articles+'</span><span class="sb-stat-label">篇文章</span></div><div class="sb-stat"><span class="sb-stat-num">'+s.tags+'</span><span class="sb-stat-label">个标签</span></div><div class="sb-stat"><span class="sb-stat-num">'+(s.chars>1000?Math.round(s.chars/1000)+'k':s.chars)+'</span><span class="sb-stat-label">总字数</span></div><div class="sb-stat"><span class="sb-stat-num">'+rtStr+'</span><span class="sb-stat-label">运行时长</span></div></div><div class="sb-recent"><span class="sb-recent-label">最近活动</span><span>'+s.lastActivity+'</span></div></div>';
+function renderLeftSidebar() {
+  var s = getStats();
+  var rt = s.days;
+  var y = Math.floor(rt / 365);
+  var m = Math.floor((rt % 365) / 30);
+  var d = rt % 30;
+  var rtStr = y ? (y + '年' + (m ? m + '个月' : '')) : (m ? (m + '个月' + d + '天') : (d + '天'));
+
+  // 联系方式卡片
+  var contactHtml = '<div class="sidebar-card">' +
+    '<h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 联系方式</h3>' +
+    '<div class="sb-contact">' +
+    (contactInfo.qq ? '<a class="sb-contact-btn" href="tencent://message/?uin=' + contactInfo.qq + '"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 11.5c0 3 1.3 5.6 3.4 7.3-.2.6-.5 1.8-.8 2.7-.1.3.2.6.5.5.9-.3 1.8-.8 2.6-1.3 1.4.4 2.9.7 4.3.7 5.5 0 10-4.5 10-9.5S17.5 2 12 2z"/></svg> QQ</a>' : '') +
+    (contactInfo.github ? '<a class="sb-contact-btn" href="https://github.com/' + contactInfo.github + '" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 4.4 2.9 8.2 6.8 9.5.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.4-1.1.7-1.3-2.2-.3-4.5-1.1-4.5-5 0-1.1.4-2 1-2.7-.1-.3-.5-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .6 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.5 5 .4.3.7.9.7 1.8v2.7c0 .3.2.6.7.5 4-1.3 6.8-5.1 6.8-9.5C22 6.5 17.5 2 12 2z"/></svg> GitHub</a>' : '') +
+    (contactInfo.email ? '<a class="sb-contact-btn" href="mailto:' + contactInfo.email + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4l-10 8L2 4"/></svg> Email</a>' : '') +
+    '</div></div>';
+
+  // 公告 + 站点统计卡片
+  var statsHtml = '<div class="sidebar-card">' +
+    '<h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> 公告</h3>' +
+    '<p class="sb-announce">欢迎来到 rainhotaru！<br>这里记录技术与生活的点滴。</p>' +
+    '</div>' +
+    '<div class="sidebar-card">' +
+    '<h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 站点统计</h3>' +
+    '<div class="sb-stats">' +
+    '<div class="sb-stat"><span class="sb-stat-num">' + s.articles + '</span><span class="sb-stat-label">篇文章</span></div>' +
+    '<div class="sb-stat"><span class="sb-stat-num">' + s.tags + '</span><span class="sb-stat-label">个标签</span></div>' +
+    '<div class="sb-stat"><span class="sb-stat-num">' + (s.chars > 1000 ? Math.round(s.chars / 1000) + 'k' : s.chars) + '</span><span class="sb-stat-label">总字数</span></div>' +
+    '<div class="sb-stat"><span class="sb-stat-num">' + rtStr + '</span><span class="sb-stat-label">运行时长</span></div>' +
+    '</div><div class="sb-recent"><span class="sb-recent-label">最近活动</span><span>' + s.lastActivity + '</span></div></div>';
+
+  return contactHtml + statsHtml;
 }
 
 /* ===== Calendar ===== */
@@ -593,9 +620,14 @@ function renderGuestbook_old(){var msgs=getMessages().sort(function(a,b){return 
   h+='</div>';document.getElementById('app').innerHTML=h
 }
 
-var heroSrc="media/遐蝶.gif"; /* 改成你的动图(.gif/.png/.jpg)或视频(.mp4/.webm)路径 */
-var contactInfo={qq:"2907075740",github:"universe233666-alt",email:"universe233666@gmail.com"};/* 改了上面就能在左侧栏显示 */
-initTheme();router.navigate('home');
+var heroSrc = "media/退蝶.gif"; // 改成你的动图(.gif/.png/.jpg)或视频(.mp4/.webm)路径
+var contactInfo = {
+  qq: "2907075740",
+  github: "universe233666-alt",
+  email: "universe233666@gmail.com"
+};
+initTheme();
+router.navigate('home');
 </script>
 </body>
 </html>
